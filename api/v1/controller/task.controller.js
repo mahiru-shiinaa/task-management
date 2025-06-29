@@ -58,7 +58,7 @@ module.exports.changeStatus = async (req, res) => {
     const updatedTask = await Task.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true } // Trả về bản ghi sau khi cập nhật
+      { new: true } // Trả về bản ghi sau khi cập nhật chỉ dùng với findByIdAndUpdate
     );
 
     if (!updatedTask) {
@@ -72,3 +72,21 @@ module.exports.changeStatus = async (req, res) => {
   }
 };
 
+//[PATCH]  /api/v1/tasks/change-multi
+module.exports.changeMulti = async (req, res) => {
+  try {
+    const {ids, key, value} = req.body;
+    switch (key) {
+        case "status":
+            const updatedTasks = await Task.updateMany({ _id: { $in: ids } }, { status: value });
+            res.json(updatedTasks);
+            break;
+        default:
+            res.status(404).json({ message: "Không tìm thấy task" });
+            break;
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
