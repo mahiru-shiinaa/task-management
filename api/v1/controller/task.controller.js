@@ -51,3 +51,24 @@ module.exports.detail = async (req, res) => {
     res.json("Không tìm thành data");
   }
 };
+
+//[PATCH] /api/v1/tasks/change-status/:id
+module.exports.changeStatus = async (req, res) => {
+  try {
+    const updatedTask = await Task.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true } // Trả về bản ghi sau khi cập nhật
+    );
+
+    if (!updatedTask) {
+      return res.status(404).json({ message: "Không tìm thấy task" });
+    }
+
+    res.json(updatedTask);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
