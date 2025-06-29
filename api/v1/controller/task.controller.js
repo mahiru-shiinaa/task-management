@@ -81,6 +81,10 @@ module.exports.changeMulti = async (req, res) => {
             const updatedTasks = await Task.updateMany({ _id: { $in: ids } }, { status: value });
             res.json(updatedTasks);
             break;
+        case "delete":
+            const deletedTasks = await Task.updateMany({ _id: { $in: ids } }, { deleted: true, deletedAt: new Date() });
+            res.json("Xóa thành công!");
+            break;
         default:
             res.status(404).json({ message: "Không tìm thấy task" });
             break;
@@ -98,6 +102,31 @@ try {
     await newTask.save();
     res.json(newTask);
      
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+    
+}
+};
+
+//[PATCH] /api/v1/tasks/edit/:id
+module.exports.edit = async (req, res) => {
+try {
+    const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updatedTask);
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+    
+}
+};
+
+//[DELETE] /api/v1/tasks/delete/:id
+module.exports.delete = async (req, res) => {
+try {
+    const id = req.params.id;
+    await Task.updateOne({ _id: id }, { deleted: true, deletedAt: new Date() });
+    res.json({ message: "Xóa task thanh cong" });
 } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Lỗi server" });
