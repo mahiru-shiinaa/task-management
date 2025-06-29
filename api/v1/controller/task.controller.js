@@ -90,3 +90,17 @@ module.exports.changeMulti = async (req, res) => {
     res.status(500).json({ message: "Lỗi server" });
   }
 };
+
+//[POST] /api/v1/tasks/create
+module.exports.create = async (req, res) => {
+try {
+    const newTask = new Task(req.body);
+    await newTask.save();
+    res.json(newTask);
+     
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+    
+}
+};
