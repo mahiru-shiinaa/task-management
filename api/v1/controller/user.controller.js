@@ -108,3 +108,33 @@ module.exports.otpPassword = async (req, res) => {
     res.status(500).json({ message: "Lỗi server" });
   }
 };
+
+//[POST] /api/v1/users/password/reset
+module.exports.resetPassword = async (req, res) => {
+  try {
+    const token = req.body.token;
+    const password = md5(req.body.password);
+    const user = await User.findOne({ token: token, deleted: false });
+    if(!user) {
+      return res.json({
+        code: 400,
+        message: "Tài khoản không tồn tại",
+      });
+    }
+    if(user.password === password) {
+      return res.json({
+        code: 400,
+        message: "Vui lòng nhập mật khẩu khác mật khẩu cũ",
+      });
+    }
+    user.password = password;
+    await user.save();
+    res.json({
+      code: 200,
+      message: "Đổi mật khẩu thành công",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
