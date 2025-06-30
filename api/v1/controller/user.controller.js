@@ -57,9 +57,9 @@ module.exports.forgotPassword = async (req, res) => {
       return res.json({
         code: 400,
         message: "Email không tồn tại",
-      })
+      });
     }
-    
+
     // Việc 1: Tạo mã Otp và lưu thông tin OTP và Email yêu cầu vào collection
     const otp = generateHelper.generateRandomNumber();
 
@@ -75,9 +75,34 @@ module.exports.forgotPassword = async (req, res) => {
     const subject = "Mã OTP xác minh lấy lại mật khẩu";
     sendMailHelper.sendMail(email, subject, otp);
     res.json({
-        code: 200,
-        message: "Gửi mã OTP thành công",
-    })
+      code: 200,
+      message: "Gửi mã OTP thành công",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+//[POST] /api/v1/users/password/otp
+module.exports.otpPassword = async (req, res) => {
+  try {
+    const email = req.body.email;
+    const otp = req.body.otp;
+    const result = await ForgotPassword.findOne({ email: email, otp: otp });
+    if (!result) {
+      return res.json({
+        code: 400,
+        message: "Sai mã OTP",
+      });
+    }
+    const user = await User.findOne({ email: email, deleted: false });
+    res.cookie("token", user.token, { httpOnly: true });
+    res.json({
+      code: 200,
+      message: "Xác thực thành công",
+      token: user.token,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Lỗi server" });
