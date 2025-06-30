@@ -138,3 +138,18 @@ module.exports.resetPassword = async (req, res) => {
     res.status(500).json({ message: "Lỗi server" });
   }
 };
+
+//[GET] /api/v1/users/detail
+module.exports.detail = async (req, res) => {
+  try {
+    const user = await User.findOne({ token: req.cookies.token, deleted: false }).select("-password -token");
+    res.json({
+      code: 200,
+      message: "Thành công",
+      user: user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
