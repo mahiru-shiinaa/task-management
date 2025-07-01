@@ -1,9 +1,10 @@
 const express = require("express");
+require("dotenv").config();
 const database = require("./config/database");
 const app = express();
 const cookieParser = require("cookie-parser");
 const port = process.env.PORT || 3000;
-require("dotenv").config();
+
 const cors = require("cors"); 
 database.connect();
 // Middleware để đọc body từ client, không cần body-parser nâng cao
