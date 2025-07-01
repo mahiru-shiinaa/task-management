@@ -166,3 +166,32 @@ module.exports.detail = async (req, res) => {
     res.status(500).json({ message: "Lỗi server" });
   }
 };
+
+//[GET] /api/v1/users/logout
+module.exports.logout = async (req, res) => {
+  try {
+    res.clearCookie("token");
+    res.json({
+      code: 200,
+      message: "Đăng xuat thanh cong",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+//[GET] /api/v1/users/list
+module.exports.list = async (req, res) => {
+  try {
+    const users = await User.find({ deleted: false });
+    res.json({
+      code: 200,
+      message: "Thành công",
+      users: users,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};

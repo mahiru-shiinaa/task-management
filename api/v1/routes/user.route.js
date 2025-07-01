@@ -4,6 +4,7 @@ const userController = require("../controller/user.controller");
 
 const authMiddlewares = require("../middlewares/auth.middleware");
 
+router.get("/list", authMiddlewares.requireAuth, userController.list); 
 router.post("/register", userController.register); 
 router.post("/login", userController.login); 
 router.post("/password/forgot", userController.forgotPassword); 
