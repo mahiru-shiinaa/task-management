@@ -142,12 +142,24 @@ module.exports.resetPassword = async (req, res) => {
 
 //[GET] /api/v1/users/detail
 module.exports.detail = async (req, res) => {
+  // Cách 1
+  // try {
+  //   const user = await User.findOne({ token: req.cookies.token, deleted: false }).select("-password -token");
+  //   res.json({
+  //     code: 200,
+  //     message: "Thành công",
+  //     user: user,
+  //   });
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).json({ message: "Lỗi server" });
+  // }
   try {
-    const user = await User.findOne({ token: req.cookies.token, deleted: false }).select("-password -token");
+    
     res.json({
       code: 200,
       message: "Thành công",
-      user: user,
+      user: req.user,
     });
   } catch (error) {
     console.error(error);
