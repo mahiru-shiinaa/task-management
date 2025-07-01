@@ -14,7 +14,8 @@ module.exports.register = async (req, res) => {
     if (exitsEmail) {
       return res.status(400).json({ message: "Email đã tồn tại" });
     }
-    const newUser = new User(req.body);
+    req.body.token = generateHelper.generateToken();
+    const newUser = new User(req.body );
     await newUser.save();
     const token = newUser.token;
     res.cookie("token", token, { httpOnly: true });

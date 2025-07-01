@@ -8,10 +8,7 @@ const userSchema = new mongoose.Schema(
     email: String,
     password: String,
     statusOnline: String,
-    token: {
-      type: String,
-      default: generate.generateToken(),
-    },
+    token: String,
     phone: String,
     avatar: String,
     // Kiểu là boolean, nếu mà tạo mới thì để kiểu mặc định là false
