@@ -13,7 +13,9 @@ app.use(express.urlencoded({ extended: true })); // Nếu dùng form HTML gửi 
 app.use(cookieParser());
 
 //  Cho phép CORS
-app.use(cors()); // 👈 cấu hình mặc định: cho phép tất cả origin
+app.use(cors({
+  credentials: true 
+})); // 👈 cấu hình mặc định: cho phép tất cả origin
 const routesApiV1 = require("./api/v1/routes/index.route");
 routesApiV1(app);
 
